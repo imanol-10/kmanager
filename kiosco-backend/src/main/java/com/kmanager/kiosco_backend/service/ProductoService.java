@@ -129,4 +129,12 @@ public class ProductoService {
     public List<String> obtenerCategorias(){
         return productoRepository.findAllCategorias();
     }
+
+    /**
+     * Busca un producto por codigo de barras
+     */
+    @Transactional(readOnly = true)
+    public Optional<Producto> buscarPorCodigoBarras(String codigoBarras) {
+        return productoRepository.findByCodigoBarras(codigoBarras);
+    }
 }

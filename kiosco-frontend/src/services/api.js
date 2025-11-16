@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // URL base de tu backend
-const API_URL = 'http://localhost:8080/api';
+const API_URL = 'http://192.168.1.112:8080/api';
 
 // Crear instancia de axios con configuración base
 const api = axios.create({
@@ -43,6 +43,10 @@ export const productosAPI = {
   // Ajustar stock
   ajustarStock: (id, cantidad) => 
     api.patch(`/productos/${id}/stock`, { cantidad }),
+
+  //Codigo de barra
+  buscarPorCodigoBarras: (codigo) => 
+    api.get('/productos/buscar/codigo-barras', {params: {codigo} }),
 };
 
 // ========== VENTAS ==========

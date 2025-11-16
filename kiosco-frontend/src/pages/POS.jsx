@@ -7,6 +7,8 @@ import { productosAPI, ventasAPI } from '../services/api';
 import ProductImage from '../components/ProductImage';
 import Toast from '../components/Toast';
 import CantidadPesoModal from '../components/CantidadPesoModal';
+import BarcodeScanner from '../components/BarcodeScanner';
+import { Scan } from 'lucide-react'; // Agregar Scan a los iconos importados
 
 export default function POS() {
   // Estados
@@ -21,6 +23,8 @@ export default function POS() {
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
   const [productoParaPeso, setProductoParaPeso] = useState(null);
+  const [mostrarEscaner, setMostrarEscaner] = useState(false);
+  const [buscandoProducto, setBuscandoProducto] = useState(false);
 
   const mostrarToast = (mensaje, tipo) => {
     setToast({ mensaje, tipo });
@@ -176,6 +180,28 @@ export default function POS() {
     }
   };
 
+  // Agregar esta función para manejar el escaneo:
+const handleBarcodeScan = async (codigo) => {
+  setBuscandoProducto(true);
+  try {
+    const response = await productosAPI.buscarPorCodigoBarras(codigo);
+    const producto = response.data;
+    
+    // Agregar el producto al carrito
+    agregarAlCarrito(producto);
+    mostrarToast(`✓ ${producto.nombre} agregado al carrito`, 'success');
+    
+  } catch (error) {
+    if (error.status === 404) {
+      mostrarToast(`Producto no encontrado: ${codigo}`, 'warning');
+    } else {
+      mostrarToast('Error al buscar producto', 'error');
+    }
+  } finally {
+    setBuscandoProducto(false);
+  }
+};
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-100 dark:from-gray-900 dark:to-gray-800 p-4 transition-colors duration-300">
       {/* Notificaciones Toast */}
@@ -213,6 +239,14 @@ export default function POS() {
                     className="input pl-10"
                   />
                 </div>
+                <button
+                 onClick={() => setMostrarEscaner(true)}
+                 className="btn-primary flex items-center gap-2 whitespace-nowrap"
+                 disabled={buscandoProducto}
+                >
+                  <Scan size={20} />
+                  {buscandoProducto ? 'Buscando...' : 'Escanear'}
+                </button>
               </div>
 
               {/* Categorías */}
@@ -483,6 +517,13 @@ export default function POS() {
           onCancelar={() => setProductoParaPeso(null)}
         />
       )}
+
+      {/* Escáner de Código de Barras */}
+      <BarcodeScanner
+      isOpen={mostrarEscaner}
+      onScan={handleBarcodeScan}
+      onClose={() => setMostrarEscaner(false)}
+      />
     </div>
   );
 }

@@ -153,6 +153,20 @@ public class ProductoController {
         }
     }
 
+
+    /**
+     * GET /api/productos/buscar/codigo-barras?codigo=7790001234567
+     * Busca un producto por código de barras.
+     *
+     * Este endpoint es usado por el escáner de códigos de barras.
+     */
+    @GetMapping("/buscar/codigo-barras")
+    public ResponseEntity<Producto> buscarPorCodigoBarras(@RequestParam String codigo) {
+        return productoService.buscarPorCodigoBarras(codigo)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     /**
      * Clase interna para recibir el ajuste de stock.
      * Representa el JSON: { "cantidad": 10 }

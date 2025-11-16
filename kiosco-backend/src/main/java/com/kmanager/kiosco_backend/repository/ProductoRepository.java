@@ -6,12 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
     List<Producto> findByCategoria(String categoria);
 
     List<Producto> findByNombreContainingIgnoreCase(String nombre);
+
+    Optional<Producto> findByCodigoBarras(String codigoBarras);
 
     @Query("SELECT p FROM Producto p WHERE p.stockActual < p.stockMinimo")
     List<Producto> findProductosConStockBajo();

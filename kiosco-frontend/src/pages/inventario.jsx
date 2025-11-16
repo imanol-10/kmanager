@@ -24,6 +24,7 @@ export default function Inventario() {
   // Form state
   const [form, setForm] = useState({
     nombre: '',
+    codigoBarras: '',
     precioVenta: '',
     precioCosto: '',
     stockActual: '',
@@ -69,6 +70,7 @@ export default function Inventario() {
       setProductoEditando(producto);
       setForm({
         nombre: producto.nombre || '',
+        codigoBarras: producto.codigoBarras || '',
         precioVenta: producto.precioVenta || '',
         precioCosto: producto.precioCosto || '',
         stockActual: producto.stockActual || '',
@@ -83,6 +85,7 @@ export default function Inventario() {
       setProductoEditando(null);
       setForm({
         nombre: '',
+        codigoBarras: '',
         precioVenta: '',
         precioCosto: '',
         stockActual: '',
@@ -378,6 +381,22 @@ export default function Inventario() {
                   className="input"
                   required
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2">
+                 Código de Barras (opcional)
+                </label>
+                <input
+                 type="text"
+                 value={form.codigoBarras}
+                 onChange={(e) => setForm({...form, codigoBarras: e.target.value})}
+                 className="input"
+                 placeholder="7790001234567"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Escanea o ingresa el código de barras del producto
+                </p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
